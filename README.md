@@ -22,7 +22,7 @@ PR Handlooms Saree Search is a full-stack e-commerce experience for discovering 
 
 ### Screenshots
 
-Add screenshots or GIFs after deploying:
+Screenshots from the production UI:
 
 | Home | Search Modal | Search Results |
 | --- | --- | --- |
@@ -346,7 +346,6 @@ git push origin main
 
 ## Roadmap
 
-- Add production screenshots and demo GIFs
 - Add official affiliate/API integrations for marketplace results
 - Add automated tests for `/api/search`
 - Add persistent search analytics and popular query tracking
