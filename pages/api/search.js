@@ -26,7 +26,7 @@ export default async function handler(req, res) {
     let external = []
 
     if (internal.length < 5 || filters.includeExternal) {
-      external = await searchExternalPlatforms(filters)
+      external = await searchExternalProducts(filters)
     }
 
     const results = [...internal, ...external]
@@ -52,52 +52,72 @@ export default async function handler(req, res) {
 }
 
 async function searchInternalProducts(filters) {
-  const connection = await connectMongo()
+  let connection = null
+
+  try {
+    connection = await connectMongo()
+  } catch (error) {
+    console.error("Mongo search connection failed; using website products instead:", error)
+    return filterWebsiteProducts(filters).map(normalizeWebsiteProduct)
+  }
 
   if (!connection) {
     return filterWebsiteProducts(filters).map(normalizeWebsiteProduct)
   }
 
-  if (process.env.SEED_SAMPLE_PRODUCTS !== "false" && (await Product.estimatedDocumentCount()) === 0) {
-    await Product.insertMany(sampleSarees)
+  try {
+    if (process.env.SEED_SAMPLE_PRODUCTS !== "false" && (await Product.estimatedDocumentCount()) === 0) {
+      await Product.insertMany(sampleSarees)
+    }
+
+    const query = {}
+    const and = []
+
+    if (filters.q) {
+      and.push({
+        $or: [
+          { name: regex(filters.q) },
+          { description: regex(filters.q) },
+          { category: regex(filters.q) },
+          { color: regex(filters.q) },
+          { occasion: regex(filters.q) },
+          { material: regex(filters.q) },
+        ],
+      })
+    }
+
+    if (filters.category) query.category = regex(filters.category)
+    if (filters.color) query.color = regex(filters.color)
+    if (filters.occasion) query.occasion = regex(filters.occasion)
+    if (filters.minPrice || filters.maxPrice) {
+      query.price = {}
+      if (filters.minPrice) query.price.$gte = Number(filters.minPrice)
+      if (filters.maxPrice) query.price.$lte = Number(filters.maxPrice)
+    }
+
+    if (and.length) query.$and = and
+
+    const products = await Product.find(query).sort({ inStock: -1, price: 1 }).limit(24).lean()
+    const databaseProducts = products.map(normalizeInternalProduct)
+    const databaseNames = new Set(databaseProducts.map((product) => product.name.toLowerCase()))
+    const localProducts = filterWebsiteProducts(filters)
+      .filter((product) => !databaseNames.has(product.name.toLowerCase()))
+      .map(normalizeWebsiteProduct)
+
+    return [...databaseProducts, ...localProducts].slice(0, 24)
+  } catch (error) {
+    console.error("Mongo product search failed; using website products instead:", error)
+    return filterWebsiteProducts(filters).map(normalizeWebsiteProduct)
   }
+}
 
-  const query = {}
-  const and = []
-
-  if (filters.q) {
-    and.push({
-      $or: [
-        { $text: { $search: filters.q } },
-        { name: regex(filters.q) },
-        { description: regex(filters.q) },
-        { category: regex(filters.q) },
-        { color: regex(filters.q) },
-        { occasion: regex(filters.q) },
-        { material: regex(filters.q) },
-      ],
-    })
+async function searchExternalProducts(filters) {
+  try {
+    return await searchExternalPlatforms(filters)
+  } catch (error) {
+    console.error("External marketplace search failed; continuing with internal products only:", error)
+    return []
   }
-
-  if (filters.category) query.category = regex(filters.category)
-  if (filters.color) query.color = regex(filters.color)
-  if (filters.occasion) query.occasion = regex(filters.occasion)
-  if (filters.minPrice || filters.maxPrice) {
-    query.price = {}
-    if (filters.minPrice) query.price.$gte = Number(filters.minPrice)
-    if (filters.maxPrice) query.price.$lte = Number(filters.maxPrice)
-  }
-
-  if (and.length) query.$and = and
-
-  const products = await Product.find(query).sort({ inStock: -1, price: 1 }).limit(24).lean()
-  const databaseProducts = products.map(normalizeInternalProduct)
-  const databaseNames = new Set(databaseProducts.map((product) => product.name.toLowerCase()))
-  const localProducts = filterWebsiteProducts(filters)
-    .filter((product) => !databaseNames.has(product.name.toLowerCase()))
-    .map(normalizeWebsiteProduct)
-
-  return [...databaseProducts, ...localProducts].slice(0, 24)
 }
 
 function normalizeFilters(query) {
