@@ -347,7 +347,6 @@ git push origin main
 ## Roadmap
 
 - Add production screenshots and demo GIFs
-- Add a `LICENSE` file for the MIT license badge
 - Add official affiliate/API integrations for marketplace results
 - Add automated tests for `/api/search`
 - Add persistent search analytics and popular query tracking
@@ -355,4 +354,4 @@ git push origin main
 
 ## License
 
-MIT License. Add a `LICENSE` file before distributing the project publicly.
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
