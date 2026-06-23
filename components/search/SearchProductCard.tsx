@@ -56,10 +56,7 @@ export function SearchProductCard({
         <div className="absolute left-3 top-3">
           {isExternal ? (
             <span className="inline-flex items-center gap-1.5 rounded-full bg-background/95 px-2.5 py-1 text-xs font-medium shadow-sm">
-              {product.platformLogo ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={product.platformLogo} alt="" className="h-3.5 w-10 object-contain" />
-              ) : null}
+              <MarketplaceMark platform={product.platform} platformName={product.platformName} />
               {product.platformName}
             </span>
           ) : (
@@ -99,5 +96,57 @@ export function SearchProductCard({
         </div>
       </div>
     </article>
+  )
+}
+
+function MarketplaceMark({
+  platform,
+  platformName,
+}: {
+  platform?: string
+  platformName?: string
+}) {
+  const key = String(platform || platformName || "").toLowerCase()
+
+  if (key.includes("flipkart")) {
+    return (
+      <span
+        aria-hidden="true"
+        className="grid size-4 place-items-center rounded-[3px] bg-[#2874f0] text-[10px] font-bold leading-none text-[#ffe500]"
+      >
+        f
+      </span>
+    )
+  }
+
+  if (key.includes("myntra")) {
+    return (
+      <span
+        aria-hidden="true"
+        className="grid size-4 place-items-center rounded-[3px] bg-white text-[10px] font-black leading-none text-[#ff3f6c] ring-1 ring-black/10"
+      >
+        M
+      </span>
+    )
+  }
+
+  if (key.includes("amazon")) {
+    return (
+      <span
+        aria-hidden="true"
+        className="grid size-4 place-items-center rounded-[3px] bg-[#ff9900] text-[10px] font-black leading-none text-[#111827]"
+      >
+        a
+      </span>
+    )
+  }
+
+  return (
+    <span
+      aria-hidden="true"
+      className="grid size-4 place-items-center rounded-[3px] bg-muted text-[10px] font-bold leading-none text-foreground"
+    >
+      {(platformName || "M").charAt(0).toUpperCase()}
+    </span>
   )
 }
