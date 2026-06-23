@@ -12,7 +12,8 @@ export type ModalSearchResult = {
   id: string
   source: "internal" | "external"
   name: string
-  price: number
+  price?: number
+  priceLabel?: string
   image?: string
   images?: string[]
   inStock?: boolean
@@ -35,6 +36,7 @@ export function SearchProductCard({
   const isExternal = product.source === "external"
   const image = product.image || product.images?.[0] || "/placeholder.jpg"
   const canAddToCart = Boolean(product.cartProductId || product.id)
+  const priceText = typeof product.price === "number" && product.price > 0 ? formatPrice(product.price) : product.priceLabel || "Check latest price"
 
   return (
     <article
@@ -69,7 +71,7 @@ export function SearchProductCard({
 
       <div className="flex min-h-0 flex-1 flex-col gap-3 p-3 sm:p-4">
         <h3 className="line-clamp-2 min-h-[2.75rem] font-serif text-base font-medium leading-snug">{product.name}</h3>
-        <p className="mt-auto min-h-7 text-lg font-semibold">{formatPrice(product.price)}</p>
+        <p className="mt-auto min-h-7 text-lg font-semibold">{priceText}</p>
         <div className="mt-auto">
           {isExternal ? (
             <Button

@@ -1,4 +1,5 @@
-import { extractIntent, unique } from "@/lib/search"
+
+ import { extractIntent, unique } from "@/lib/search"
 
 export type MarketplaceName = "Amazon" | "Flipkart" | "Meesho" | "Myntra"
 

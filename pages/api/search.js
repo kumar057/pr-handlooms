@@ -23,13 +23,16 @@ export default async function handler(req, res) {
 
     const filters = normalizeFilters(req.query)
     const internal = await searchInternalProducts(filters)
-    let external = []
+    const external = await searchExternalProducts(filters)
 
-    if (internal.length < 5 || filters.includeExternal) {
-      external = await searchExternalProducts(filters)
+    const results = []
+
+    const max = Math.max(internal.length, external.length)
+
+    for (let i = 0; i < max; i++) {
+      if (internal[i]) results.push(internal[i])
+      if (external[i]) results.push(external[i])
     }
-
-    const results = [...internal, ...external]
 
     return res.status(200).json({
       success: true,
