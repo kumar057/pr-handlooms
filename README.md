@@ -2,8 +2,8 @@
 
 **Elegant Saree Search with Multi-Platform Integration**
 
-[![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-000000?style=for-the-badge&logo=vercel)](https://your-vercel-url.vercel.app)
-[![GitHub](https://img.shields.io/badge/Repository-GitHub-181717?style=for-the-badge&logo=github)](https://github.com/yourusername/saree-search)
+[![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-000000?style=for-the-badge&logo=vercel)](https://pr-handlooms.vercel.app/)
+[![GitHub](https://img.shields.io/badge/Repository-GitHub-181717?style=for-the-badge&logo=github)](https://github.com/kumar057/pr-handlooms)
 [![Next.js](https://img.shields.io/badge/Next.js-16.2.6-000000?style=for-the-badge&logo=nextdotjs)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/atlas)
@@ -15,8 +15,8 @@ PR Handlooms Saree Search is a full-stack e-commerce experience for discovering 
 
 ## Live Demo
 
-- **Production**: [https://your-vercel-url.vercel.app](https://your-vercel-url.vercel.app)
-- **Repository**: [https://github.com/yourusername/saree-search](https://github.com/yourusername/saree-search)
+- **Production**: [https://pr-handlooms.vercel.app/](https://pr-handlooms.vercel.app/)
+- **Repository**: [https://github.com/kumar057/pr-handlooms](https://github.com/kumar057/pr-handlooms)
 - **Hosting**: Vercel
 - **Database**: MongoDB Atlas in production, MongoDB/local fallback for development
 
@@ -91,8 +91,8 @@ Add screenshots or GIFs after deploying:
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/yourusername/saree-search.git
-cd saree-search
+git clone https://github.com/kumar057/pr-handlooms.git
+cd pr-handlooms
 
 # 2. Install dependencies
 npm install
@@ -356,4 +356,3 @@ git push origin main
 ## License
 
 MIT License. Add a `LICENSE` file before distributing the project publicly.
-
