@@ -35,6 +35,7 @@ export function SearchProductCard({
   const { addToCart, setCartOpen } = useStore()
   const isExternal = product.source === "external"
   const image = product.image || product.images?.[0] || "/placeholder.jpg"
+  const fallbackImage = isExternal ? "/products/banarasi-gold.png" : "/placeholder.jpg"
   const canAddToCart = Boolean(product.cartProductId || product.id)
   const priceText = typeof product.price === "number" && product.price > 0 ? formatPrice(product.price) : product.priceLabel || "Check latest price"
 
@@ -48,11 +49,27 @@ export function SearchProductCard({
           <a href={product.url} target="_blank" rel="noopener noreferrer sponsored" aria-label={`Open ${product.name}`}>
             {/* External marketplace images are remote and may not be configured for next/image. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={image} alt={product.name} className="size-full object-cover transition-transform duration-700 group-hover:scale-105" />
+            <img
+              src={image}
+              alt={product.name}
+              className="size-full object-cover transition-transform duration-700 group-hover:scale-105"
+              onError={(event) => {
+                if (event.currentTarget.src.endsWith(fallbackImage)) return
+                event.currentTarget.src = fallbackImage
+              }}
+            />
           </a>
         ) : (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={image} alt={product.name} className="size-full object-cover transition-transform duration-700 group-hover:scale-105" />
+          <img
+            src={image}
+            alt={product.name}
+            className="size-full object-cover transition-transform duration-700 group-hover:scale-105"
+            onError={(event) => {
+              if (event.currentTarget.src.endsWith(fallbackImage)) return
+              event.currentTarget.src = fallbackImage
+            }}
+          />
         )}
 
         <div className="absolute left-3 top-3">
